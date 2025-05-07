@@ -179,101 +179,102 @@ int main() {
 
 	readData(count, countries);
 	displayData(count, countries);
+	do {
+		printf("\nMenu:\n");
+		printf("1 - Search by field\n");
+		printf("2 - Sort by field\n");
+		printf("3 - Insert at end\n");
+		printf("4 - Insert at beginning\n");
+		printf("5 - Insert at position\n");
+		printf("6 - Delete by position\n");
+		printf("Choose an option: ");
+		scanf_s("%i", &menuOption);
 
-	printf("\nMenu:\n");
-	printf("1 - Search by field\n");
-	printf("2 - Sort by field\n");
-	printf("3 - Insert at end\n");
-	printf("4 - Insert at beginning\n");
-	printf("5 - Insert at position\n");
-	printf("6 - Delete by position\n");
-	printf("Choose an option: ");
-	scanf_s("%i", &menuOption);
-
-	switch (menuOption) {
-	case 1:
-		printf("Search by:\n1-Name 2-Capital 3-Cities 4-Year 5-Area 6-President\nChoose: ");
-		scanf_s("%i", &searchOption);
-		switch (searchOption) {
+		switch (menuOption) {
 		case 1:
-			printf("Enter country name: ");
-			scanf_s("%s", name, (unsigned)sizeof(name));
-			searchByWord(count, countries, name); break;
+			printf("Search by:\n1-Name 2-Capital 3-Cities 4-Year 5-Area 6-President\nChoose: ");
+			scanf_s("%i", &searchOption);
+			switch (searchOption) {
+			case 1:
+				printf("Enter country name: ");
+				scanf_s("%s", name, (unsigned)sizeof(name));
+				searchByWord(count, countries, name); break;
+			case 2:
+				printf("Enter capital: ");
+				scanf_s("%s", capital, (unsigned)sizeof(capital));
+				searchByWord(count, countries, capital); break;
+			case 3:
+				printf("Enter number of cities: ");
+				scanf_s("%i", &cities);
+				searchByNumber(count, countries, cities); break;
+			case 4:
+				printf("Enter foundation year: ");
+				scanf_s("%i", &year);
+				searchByNumber(count, countries, year); break;
+			case 5:
+				printf("Enter area: ");
+				scanf_s("%i", &area);
+				searchByNumber(count, countries, area); break;
+			case 6:
+				printf("Enter president's name: ");
+				scanf_s("%s", president, (unsigned)sizeof(president));
+				searchByWord(count, countries, president); break;
+			} break;
+
 		case 2:
-			printf("Enter capital: ");
-			scanf_s("%s", capital, (unsigned)sizeof(capital));
-			searchByWord(count, countries, capital); break;
+			printf("Sort by:\n1-Name 2-Capital 3-Cities 4-Year 5-Area 6-President\nChoose: ");
+			scanf_s("%i", &sortOption);
+			switch (sortOption) {
+			case 1: qsort(countries, count, sizeof(Country), compareCountryName); break;
+			case 2: qsort(countries, count, sizeof(Country), compareCapital); break;
+			case 3: qsort(countries, count, sizeof(Country), compareCityCount); break;
+			case 4: qsort(countries, count, sizeof(Country), compareFoundationYear); break;
+			case 5: qsort(countries, count, sizeof(Country), compareArea); break;
+			case 6: qsort(countries, count, sizeof(Country), comparePresidentName); break;
+			}
+			printf("\nSorted list:\n");
+			displayData(count, countries);
+			break;
+
 		case 3:
-			printf("Enter number of cities: ");
-			scanf_s("%i", &cities);
-			searchByNumber(count, countries, cities); break;
+			insertAtEnd(&countries, &count, inputNewCountry());
+			displayData(count, countries);
+			break;
+
 		case 4:
-			printf("Enter foundation year: ");
-			scanf_s("%i", &year);
-			searchByNumber(count, countries, year); break;
-		case 5:
-			printf("Enter area: ");
-			scanf_s("%i", &area);
-			searchByNumber(count, countries, area); break;
-		case 6:
-			printf("Enter president's name: ");
-			scanf_s("%s", president, (unsigned)sizeof(president));
-			searchByWord(count, countries, president); break;
-		} break;
-
-	case 2:
-		printf("Sort by:\n1-Name 2-Capital 3-Cities 4-Year 5-Area 6-President\nChoose: ");
-		scanf_s("%i", &sortOption);
-		switch (sortOption) {
-		case 1: qsort(countries, count, sizeof(Country), compareCountryName); break;
-		case 2: qsort(countries, count, sizeof(Country), compareCapital); break;
-		case 3: qsort(countries, count, sizeof(Country), compareCityCount); break;
-		case 4: qsort(countries, count, sizeof(Country), compareFoundationYear); break;
-		case 5: qsort(countries, count, sizeof(Country), compareArea); break;
-		case 6: qsort(countries, count, sizeof(Country), comparePresidentName); break;
-		}
-		printf("\nSorted list:\n");
-		displayData(count, countries);
-		break;
-
-	case 3:
-		insertAtEnd(&countries, &count, inputNewCountry());
-		displayData(count, countries);
-		break;
-
-	case 4:
-		insertAtBeginning(&countries, &count, inputNewCountry());
-		displayData(count, countries);
-		break;
-
-	case 5: {
-		int pos;
-		printf("Enter position: ");
-		scanf_s("%i", &pos);
-		if (pos >= 0 && pos <= count) {
-			insertAtPosition(&countries, &count, inputNewCountry(), pos);
+			insertAtBeginning(&countries, &count, inputNewCountry());
 			displayData(count, countries);
-		}
-		else {
-			printf("Invalid position.\n");
-		}
-		break;
-	}
+			break;
 
-	case 6: {
-		int pos;
-		printf("Enter position to delete: ");
-		scanf_s("%i", &pos);
-		if (pos >= 1 && pos <= count) {
-			deleteAtPosition(&countries, &count, pos);
-			displayData(count, countries);
+		case 5: {
+			int pos;
+			printf("Enter position: ");
+			scanf_s("%i", &pos);
+			if (pos >= 0 && pos <= count) {
+				insertAtPosition(&countries, &count, inputNewCountry(), pos);
+				displayData(count, countries);
+			}
+			else {
+				printf("Invalid position.\n");
+			}
+			break;
 		}
-		else {
-			printf("Invalid position.\n");
+
+		case 6: {
+			int pos;
+			printf("Enter position to delete: ");
+			scanf_s("%i", &pos);
+			if (pos >= 1 && pos <= count) {
+				deleteAtPosition(&countries, &count, pos);
+				displayData(count, countries);
+			}
+			else {
+				printf("Invalid position.\n");
+			}
+			break;
 		}
-		break;
-	}
-	}
+		}
+	} while (menuOption != 0);
 
 	free(countries);
 	return 0;
